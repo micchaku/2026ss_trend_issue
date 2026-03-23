@@ -13,50 +13,57 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: sans-serif; }
-        .swiper { width: 100%; height: 100vh; }
-        .swiper-slide { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            background: #000;
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: "Helvetica Neue", Arial, sans-serif; color: #fff; overflow: hidden; }
+        
+        /* クッションページ（初期表示） */
+        #cover-page {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; color: #333; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 100;
+            transition: transform 0.8s ease-in-out;
         }
-        .swiper-slide img { 
-            max-width: 100%; 
-            max-height: 100%; 
-            object-fit: contain; 
-            user-select: none;
+        #cover-page.hide { transform: translateY(-100%); }
+        
+        .thumb-img { width: 80%; max-width: 400px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .open-btn {
+            padding: 15px 40px; border: 1px solid #333; background: transparent;
+            color: #333; text-decoration: none; font-size: 14px; letter-spacing: 0.2em;
+            cursor: pointer; transition: 0.3s;
         }
-        /* ページ番号表示 */
+        .open-btn:hover { background: #333; color: #fff; }
+
+        /* 本編（スワイプ部分） */
+        .swiper { width: 100%; height: 100vh; display: none; }
+        .swiper.show { display: block; }
+        .swiper-slide { display: flex; justify-content: center; align-items: center; background: #000; }
+        .swiper-slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
         .page-num { 
-            position: fixed; 
-            bottom: 20px; 
-            left: 50%; 
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.8); 
-            font-size: 12px; 
-            z-index: 10; 
-            background: rgba(0,0,0,0.4); 
-            padding: 4px 12px; 
-            border-radius: 20px;
-            letter-spacing: 0.1em;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.6); font-size: 11px; z-index: 10;
+            background: rgba(0,0,0,0.4); padding: 4px 15px; border-radius: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="swiper">
-        <div class="swiper-wrapper" id="swiper-wrapper">
-            </div>
+    <div id="cover-page">
+        <img src="./trend_thumbnail.png" alt="Trend Thumbnail" class="thumb-img">
+        <button class="open-btn" onclick="openMagazine()">VIEW TREND ISSUE</button>
+        <p style="font-size: 10px; margin-top: 20px; letter-spacing: 0.1em; color: #999;">By BLANCO</p>
     </div>
-    <div class="page-num" id="page-num">1 / 29</div>
+
+    <div class="swiper" id="main-magazine">
+        <div class="swiper-wrapper" id="swiper-wrapper"></div>
+    </div>
+    <div class="page-num" id="page-num" style="display: none;">1 / 29</div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const totalPages = 29;
         const wrapper = document.getElementById('swiper-wrapper');
 
-        // page01.png 〜 page29.png を自動でスライドに追加
+        // 画像の生成
         for (let i = 1; i <= totalPages; i++) {
             const fileName = 'page' + String(i).padStart(2, '0') + '.png';
             const slide = document.createElement('div');
@@ -65,17 +72,23 @@
             wrapper.appendChild(slide);
         }
 
-        // Swiperの初期化
-        const swiper = new Swiper('.swiper', {
-            loop: false,
-            grabCursor: true,
-            resistanceRatio: 0.5,
-            on: {
-                slideChange: function () {
-                    document.getElementById('page-num').innerText = (this.activeIndex + 1) + ' / ' + totalPages;
+        // ボタンを押した時の動き
+        function openMagazine() {
+            document.getElementById('cover-page').classList.add('hide');
+            document.getElementById('main-magazine').classList.add('show');
+            document.getElementById('page-num').style.display = 'block';
+            
+            // スワイプ機能を起動
+            new Swiper('.swiper', {
+                loop: false,
+                grabCursor: true,
+                on: {
+                    slideChange: function () {
+                        document.getElementById('page-num').innerText = (this.activeIndex + 1) + ' / ' + totalPages;
+                    },
                 },
-            },
-        });
+            });
+        }
     </script>
 </body>
 </html>
