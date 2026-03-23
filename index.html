@@ -11,29 +11,34 @@
     <meta property="og:type" content="website">
 
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #333; }
-        #viewer-container { width: 100%; height: 100vh; }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        /* 戻るボタン（必要であれば） */
-        .back-home {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-size: 12px;
-            z-index: 100;
+        body, html { margin: 0; padding: 0; height: 100%; background-color: #f8f9fa; font-family: sans-serif; }
+        .header {
+            padding: 15px;
+            text-align: center;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .pdf-container {
+            width: 100%;
+            height: calc(100vh - 70px); /* ヘッダー分を引く */
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="viewer-container">
-        <iframe src="https://docs.google.com/viewer?url=https://micchaku.github.io/2026ss_trend_issue/2026ssTrend.pdf&embedded=true"></iframe>
+    <div class="header">
+        <span style="font-size: 14px; font-weight: bold;">2026 Spring&Summer Trend Issue By BLANCO</span>
+    </div>
+
+    <div class="pdf-container">
+        <object data="./2026ssTrend.pdf" type="application/pdf" width="100%" height="100%">
+            <p>お使いのブラウザではPDFが表示できません。<a href="./2026ssTrend.pdf">こちらをクリックしてダウンロード</a>して閲覧してください。</p>
+        </object>
     </div>
 
 </body>
