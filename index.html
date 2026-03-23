@@ -21,47 +21,60 @@
             justify-content: center; 
             align-items: center; 
             background: #000;
-            width: 100%;
-            height: 100%;
         }
         .swiper-slide img { 
             max-width: 100%; 
             max-height: 100%; 
-            object-fit: contain; /* 縦横どちらでも画面内に収める */
+            object-fit: contain; 
         }
 
-        .cover-slide { background: #fff !important; }
+        /* 表紙スライドの特別な設定 */
+        .cover-slide { 
+            background: #fff !important; 
+            flex-direction: column;
+        }
+        
+        /* サムネイルを小さくし、エフェクトをかける */
+        .cover-slide img { 
+            width: 60%; /* サイズをさらに小さく（80%→60%） */
+            max-width: 300px; 
+            height: auto;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); /* 柔らかい影 */
+            border-radius: 2px;
+            animation: floating 3s ease-in-out infinite; /* 浮遊エフェクト */
+        }
+
+        /* 浮遊アニメーション */
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
 
         /* スワイプガイド */
         .swipe-guide {
             position: absolute;
-            bottom: 15%; /* 画面下部からの位置を割合で指定 */
+            bottom: 12%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #333;
+            color: #999;
             font-size: 10px;
             letter-spacing: 0.2em;
             z-index: 10;
             pointer-events: none;
             transition: opacity 0.5s;
         }
-        
-        /* 横向き画面の時はガイドを少し上に上げるか調整 */
-        @media (orientation: landscape) {
-            .swipe-guide { bottom: 10%; }
-        }
-
         .arrow-icon {
             margin-top: 10px; width: 12px; height: 12px;
-            border-right: 1px solid #333; border-bottom: 1px solid #333;
+            border-right: 1px solid #999; border-bottom: 1px solid #999;
             transform: rotate(-45deg);
             animation: arrow-move 1.5s infinite;
         }
         @keyframes arrow-move {
             0% { transform: rotate(-45deg) translate(0, 0); opacity: 0; }
             50% { opacity: 1; }
-            100% { transform: rotate(-45deg) translate(10px, 10px); opacity: 0; }
+            100% { transform: rotate(-45deg) translate(8px, 8px); opacity: 0; }
         }
     </style>
 </head>
@@ -98,7 +111,6 @@
             on: {
                 slideChange: function () {
                     const guide = document.getElementById('guide');
-                    // 表紙（0枚目）以外ではガイドを非表示に
                     if (this.activeIndex === 0) {
                         guide.style.opacity = "1";
                     } else {
