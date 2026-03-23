@@ -10,16 +10,41 @@
     <meta property="og:url" content="https://micchaku.github.io/2026ss_trend_issue/">
     <meta property="og:image" content="https://micchaku.github.io/2026ss_trend_issue/trend_thumnail.png">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Trend Report">
-
-    <meta http-equiv="refresh" content="0;URL='./2026ssTrendmini.pdf'">
 
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; color: #666; }
-        a { color: #007bff; text-decoration: none; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background-color: #555;
+        }
+        p { color: #888; font-size: 0.9rem; margin-top: 15px; }
     </style>
 </head>
 <body>
-    <p>PDFへ移動しています。自動で切り替わらない場合は<a href="./2026ssTrendmini.pdf">こちらをクリック</a>してください。</p>
+    <div class="container">
+        <a href="./2026ssTrendmini.pdf" class="btn">PDFを閲覧する</a>
+        <p>2026 SS Trend Issue</p>
+    </div>
 </body>
 </html>
