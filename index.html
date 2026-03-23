@@ -23,6 +23,7 @@
             background: #000;
         }
 
+        /* ズームコンテナ */
         .swiper-zoom-container {
             width: 100%;
             height: 100%;
@@ -38,6 +39,7 @@
             object-fit: contain; 
         }
 
+        /* 表紙（0枚目） */
         .cover-slide { background: #fff !important; }
         .cover-slide .thumb-img { 
             width: 60%;
@@ -53,6 +55,7 @@
             100% { transform: translateY(0px); }
         }
 
+        /* スワイプガイド */
         .swipe-guide {
             position: absolute;
             bottom: 12%;
@@ -92,25 +95,31 @@
                     <div class="arrow-icon"></div>
                 </div>
             </div>
-        </div>
+            </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        const totalPages = 28; // ここを28に変更しました
+        // 合計28ページ
+        const totalPages = 28;
         const wrapper = document.getElementById('swiper-wrapper');
 
+        // JavaScriptで全ページ分スライドを作成
         for (let i = 1; i <= totalPages; i++) {
-            const fileName = 'page' + String(i).padStart(2, '0') + '.png';
+            // 数字を2桁（01, 02...）にする処理
+            const pageNum = i.toString().padStart(2, '0');
+            const fileName = `page${pageNum}.png`;
+            
             const slide = document.createElement('div');
             slide.className = 'swiper-slide';
             slide.innerHTML = `
                 <div class="swiper-zoom-container">
-                    <img src="./${fileName}" loading="lazy">
+                    <img src="./${fileName}" loading="lazy" alt="Page ${pageNum}">
                 </div>`;
             wrapper.appendChild(slide);
         }
 
+        // Swiper（スワイプ機能）の初期化
         const swiper = new Swiper('.swiper', {
             loop: false,
             grabCursor: true,
@@ -122,6 +131,7 @@
             on: {
                 slideChange: function () {
                     const guide = document.getElementById('guide');
+                    // 表紙（0枚目）の時だけスワイプガイドを表示
                     if (this.activeIndex === 0) {
                         guide.style.opacity = "1";
                     } else {
