@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
     <title>2026 Spring&Summer Trend Issue By BLANCO</title>
     
     <meta property="og:title" content="2026 Spring&Summer Trend Issue By BLANCO">
@@ -21,30 +21,35 @@
             justify-content: center; 
             align-items: center; 
             background: #000;
+            overflow: hidden; /* ズーム時のはみ出し防止 */
         }
+
+        /* ズームコンテナの設定 */
+        .swiper-zoom-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .swiper-slide img { 
             max-width: 100%; 
             max-height: 100%; 
             object-fit: contain; 
         }
 
-        /* 表紙スライドの特別な設定 */
-        .cover-slide { 
-            background: #fff !important; 
-            flex-direction: column;
-        }
-        
-        /* サムネイルを小さくし、エフェクトをかける */
-        .cover-slide img { 
-            width: 60%; /* サイズをさらに小さく（80%→60%） */
+        /* 表紙スライド */
+        .cover-slide { background: #fff !important; }
+        .cover-slide .thumb-img { 
+            width: 60%;
             max-width: 300px; 
             height: auto;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15); /* 柔らかい影 */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
             border-radius: 2px;
-            animation: floating 3s ease-in-out infinite; /* 浮遊エフェクト */
+            animation: floating 3s ease-in-out infinite;
         }
 
-        /* 浮遊アニメーション */
         @keyframes floating {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
@@ -83,7 +88,7 @@
     <div class="swiper">
         <div class="swiper-wrapper" id="swiper-wrapper">
             <div class="swiper-slide cover-slide">
-                <img src="./trend_thumbnail.png">
+                <img src="./trend_thumbnail.png" class="thumb-img">
                 <div class="swipe-guide" id="guide">
                     <span>SWIPE TO READ</span>
                     <div class="arrow-icon"></div>
@@ -97,17 +102,26 @@
         const totalPages = 29;
         const wrapper = document.getElementById('swiper-wrapper');
 
+        // 本編画像を「ズーム対応」の形式で挿入
         for (let i = 1; i <= totalPages; i++) {
             const fileName = 'page' + String(i).padStart(2, '0') + '.png';
             const slide = document.createElement('div');
             slide.className = 'swiper-slide';
-            slide.innerHTML = `<img src="./${fileName}" loading="lazy">`;
+            // ズーム用のコンテナで包む
+            slide.innerHTML = `
+                <div class="swiper-zoom-container">
+                    <img src="./${fileName}" loading="lazy">
+                </div>`;
             wrapper.appendChild(slide);
         }
 
         const swiper = new Swiper('.swiper', {
             loop: false,
             grabCursor: true,
+            zoom: {
+                maxRatio: 3, // 最大3倍まで拡大可能
+                minRatio: 1,
+            },
             on: {
                 slideChange: function () {
                     const guide = document.getElementById('guide');
