@@ -23,7 +23,6 @@
             background: #000;
         }
 
-        /* ズームコンテナ */
         .swiper-zoom-container {
             width: 100%;
             height: 100%;
@@ -39,7 +38,6 @@
             object-fit: contain; 
         }
 
-        /* 表紙スライド（ズーム対象外に設定可能） */
         .cover-slide { background: #fff !important; }
         .cover-slide .thumb-img { 
             width: 60%;
@@ -94,12 +92,12 @@
                     <div class="arrow-icon"></div>
                 </div>
             </div>
-            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        const totalPages = 29;
+        const totalPages = 28; // ここを28に変更しました
         const wrapper = document.getElementById('swiper-wrapper');
 
         for (let i = 1; i <= totalPages; i++) {
@@ -116,11 +114,10 @@
         const swiper = new Swiper('.swiper', {
             loop: false,
             grabCursor: true,
-            // ズーム設定の強化
             zoom: {
-                maxRatio: 5,      // 5倍まで拡大可能に
+                maxRatio: 5,
                 minRatio: 1,
-                toggle: true,     // ダブルタップでズーム切り替え
+                toggle: true,
             },
             on: {
                 slideChange: function () {
