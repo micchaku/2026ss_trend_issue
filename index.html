@@ -13,34 +13,42 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: "Helvetica Neue", Arial, sans-serif; color: #fff; overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: "Helvetica Neue", Arial, sans-serif; overflow: hidden; }
         
-        /* クッションページ */
-        #cover-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #fff; color: #333; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 100;
-            transition: opacity 0.8s ease-out, visibility 0.8s;
+        .swiper { width: 100%; height: 100vh; }
+        .swiper-slide { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: #000;
         }
-        #cover-page.hide { opacity: 0; visibility: hidden; }
-        
-        .thumb-img { width: 75%; max-width: 380px; margin-bottom: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        .open-btn {
-            padding: 15px 45px; border: 1px solid #333; background: transparent;
-            color: #333; text-decoration: none; font-size: 13px; letter-spacing: 0.25em;
-            cursor: pointer; transition: 0.3s; font-weight: bold;
+        .swiper-slide img { 
+            max-width: 100%; 
+            max-height: 100%; 
+            object-fit: contain; 
         }
-        .open-btn:hover { background: #333; color: #fff; }
 
-        /* スワイプガイドのアニメーション */
+        /* 最初のページ（表紙）だけ背景を白にする演出（任意） */
+        .cover-slide { background: #fff !important; }
+
+        /* スワイプガイド（最初のページにだけ表示） */
         .swipe-guide {
-            margin-top: 25px; display: flex; flex-direction: column; align-items: center;
-            color: #999; font-size: 10px; letter-spacing: 0.1em;
+            position: absolute;
+            bottom: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333; /* 表紙が白なので濃い色 */
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            z-index: 10;
+            pointer-events: none;
+            transition: opacity 0.5s;
         }
         .arrow-icon {
-            margin-top: 8px; width: 20px; height: 20px;
-            border-right: 1px solid #999; border-bottom: 1px solid #999;
-            transform: rotate(-45deg); /* 右向き矢印 */
+            margin-top: 10px; width: 15px; height: 15px;
+            border-right: 1px solid #333; border-bottom: 1px solid #333;
+            transform: rotate(-45deg);
             animation: arrow-move 1.5s infinite;
         }
         @keyframes arrow-move {
@@ -49,12 +57,6 @@
             100% { transform: rotate(-45deg) translate(10px, 10px); opacity: 0; }
         }
 
-        /* 本編 */
-        .swiper { width: 100%; height: 100vh; display: none; }
-        .swiper.show { display: block; }
-        .swiper-slide { display: flex; justify-content: center; align-items: center; background: #000; }
-        .swiper-slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
         .page-num { 
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             color: rgba(255,255,255,0.4); font-size: 10px; z-index: 10;
@@ -64,28 +66,25 @@
 </head>
 <body>
 
-    <div id="cover-page">
-        <img src="./trend_thumbnail.png" alt="Trend Thumbnail" class="thumb-img">
-        <button class="open-btn" onclick="openMagazine()">VIEW TREND ISSUE</button>
-        
-        <div class="swipe-guide">
-            <span>SWIPE TO READ</span>
-            <div class="arrow-icon"></div>
-        </div>
-        
-        <p style="font-size: 9px; margin-top: 30px; letter-spacing: 0.1em; color: #ccc;">2026 Spring & Summer By BLANCO</p>
+    <div class="swiper">
+        <div class="swiper-wrapper" id="swiper-wrapper">
+            <div class="swiper-slide cover-slide">
+                <img src="./trend_thumbnail.png">
+                <div class="swipe-guide" id="guide">
+                    <span>SWIPE TO READ</span>
+                    <div class="arrow-icon"></div>
+                </div>
+            </div>
+            </div>
     </div>
-
-    <div class="swiper" id="main-magazine">
-        <div class="swiper-wrapper" id="swiper-wrapper"></div>
-    </div>
-    <div class="page-num" id="page-num" style="display: none;">1 / 29</div>
+    <div class="page-num" id="page-num">COVER</div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         const totalPages = 29;
         const wrapper = document.getElementById('swiper-wrapper');
 
+        // 本編画像の挿入
         for (let i = 1; i <= totalPages; i++) {
             const fileName = 'page' + String(i).padStart(2, '0') + '.png';
             const slide = document.createElement('div');
@@ -94,21 +93,24 @@
             wrapper.appendChild(slide);
         }
 
-        function openMagazine() {
-            document.getElementById('cover-page').classList.add('hide');
-            document.getElementById('main-magazine').classList.add('show');
-            document.getElementById('page-num').style.display = 'block';
-            
-            new Swiper('.swiper', {
-                loop: false,
-                grabCursor: true,
-                on: {
-                    slideChange: function () {
-                        document.getElementById('page-num').innerText = (this.activeIndex + 1) + ' / ' + totalPages;
-                    },
+        const swiper = new Swiper('.swiper', {
+            loop: false,
+            grabCursor: true,
+            on: {
+                slideChange: function () {
+                    const guide = document.getElementById('guide');
+                    const pageDisplay = document.getElementById('page-num');
+                    
+                    if (this.activeIndex === 0) {
+                        guide.style.opacity = "1";
+                        pageDisplay.innerText = "COVER";
+                    } else {
+                        guide.style.opacity = "0"; // 2ページ目以降はガイドを消す
+                        pageDisplay.innerText = this.activeIndex + ' / ' + totalPages;
+                    }
                 },
-            });
-        }
+            },
+        });
     </script>
 </body>
 </html>
